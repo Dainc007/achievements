@@ -15,11 +15,13 @@ use Illuminate\Database\Eloquent\Model;
  * command can narrow it (exclude already-awarded subjects) and chunk it.
  *
  * The query's model must implement {@see Awardable}.
+ *
+ * @template TModel of Model
  */
 interface SubjectResolver
 {
     /**
-     * @return Builder<Model>
+     * @return Builder<TModel>
      */
     public function query(Achievement $achievement): Builder;
 }

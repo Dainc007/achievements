@@ -28,6 +28,9 @@ final class TickAchievements extends Command
 
     protected $description = 'Advance time-based (streak/accumulator) achievements for the given day.';
 
+    /**
+     * @param  SubjectResolver<Model>  $subjects
+     */
     public function handle(
         EvaluatorRegistry $registry,
         SubjectResolver $subjects,
@@ -52,6 +55,9 @@ final class TickAchievements extends Command
         return self::SUCCESS;
     }
 
+    /**
+     * @param  SubjectResolver<Model>  $subjects
+     */
     private function tick(
         Achievement $achievement,
         SubjectResolver $subjects,

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dainc007\Achievements\Support;
 
+use Carbon\CarbonInterface;
 use Dainc007\Achievements\Models\Achievement;
-use Illuminate\Support\Carbon;
 
 /**
  * A view-model describing one achievement's state for a given subject, ready to
@@ -18,7 +18,7 @@ final readonly class Badge
         public bool $earned,
         public int $current,
         public int $target,
-        public ?Carbon $awardedAt = null,
+        public ?CarbonInterface $awardedAt = null,
     ) {}
 
     public function percent(): float

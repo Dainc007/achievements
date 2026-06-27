@@ -30,6 +30,9 @@ final class RecalculateAchievements extends Command
 
     protected $description = 'Replay achievement evaluation for existing subjects (retroactive backfill).';
 
+    /**
+     * @param  SubjectResolver<Model>  $resolver
+     */
     public function handle(SubjectResolver $resolver, AwardAchievement $award): int
     {
         $key = $this->argument('achievement');
@@ -52,6 +55,9 @@ final class RecalculateAchievements extends Command
         return self::SUCCESS;
     }
 
+    /**
+     * @param  SubjectResolver<Model>  $resolver
+     */
     private function recalculate(Achievement $achievement, SubjectResolver $resolver, AwardAchievement $award): void
     {
         $query = $resolver->query($achievement);
