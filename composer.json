@@ -35,6 +35,13 @@
     "suggest": {
         "filament/filament": "Required only to use the optional Filament admin + badge-wall layer (^5.0)."
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dainc007\\Achievements\\AchievementsServiceProvider"
+            ]
+        }
+    },
     "autoload": {
         "psr-4": {
             "Dainc007\\Achievements\\": "src/"

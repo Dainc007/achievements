@@ -22,6 +22,7 @@ final class AchievementsServiceProvider extends PackageServiceProvider
                 'create_achievement_awards_table',
                 'create_achievement_progress_table',
             ])
+            ->runsMigrations()
             ->hasCommands([
                 RecalculateAchievements::class,
                 TickAchievements::class,
