@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dainc007\Achievements\Tests;
 
+use Dainc007\Achievements\AchievementsServiceProvider;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -18,7 +19,12 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
-            // AchievementsServiceProvider::class — added in milestone 1.
+            AchievementsServiceProvider::class,
         ];
+    }
+
+    protected function defineDatabaseMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 }
