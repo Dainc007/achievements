@@ -1,0 +1,56 @@
+{
+    "name": "dainc007/achievements",
+    "description": "A reusable, event-driven achievement / badge engine for Laravel, with an optional Filament v5 layer.",
+    "type": "library",
+    "license": "proprietary",
+    "keywords": [
+        "laravel",
+        "achievements",
+        "badges",
+        "gamification",
+        "filament"
+    ],
+    "authors": [
+        {
+            "name": "Daniel Heinze"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "illuminate/contracts": "^13.0",
+        "illuminate/database": "^13.0",
+        "illuminate/support": "^13.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dainc007\\Achievements\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dainc007\\Achievements\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test-unit": "pest --group=unit",
+        "lint": "pint",
+        "analyse": "phpstan analyse"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
