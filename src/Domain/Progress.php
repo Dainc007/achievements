@@ -12,9 +12,14 @@ namespace Dainc007\Achievements\Domain;
  */
 final readonly class Progress
 {
+    /**
+     * @param  array<string, mixed>  $meta  Evaluator bookkeeping persisted on the
+     *                                      progress row (e.g. last-counted day for ticks).
+     */
     public function __construct(
         public int $current,
         public int $target,
+        public array $meta = [],
     ) {}
 
     public function isComplete(): bool

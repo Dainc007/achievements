@@ -52,9 +52,21 @@ final readonly class AwardAchievement
             return AwardOutcome::AlreadyAwarded;
         }
 
-        $progress = $this->registry
-            ->get($achievement->type)
-            ->progress($subject, [...$context, 'config' => $achievement->config ?? []]);
+        $progressRow = AchievementProgress::query()
+            ->where('achievement_id', $achievement->getKey())
+            ->where('subject_type', $subjectType)
+            ->where('subject_id', $subjectId)
+            ->first();
+
+        $progress = $this->registry->get($achievement->type)->progress($subject, [
+            ...$context,
+            'config' => $achievement->config ?? [],
+            // Stateful evaluators (streak/accumulator) read the prior state.
+            'progress' => [
+                'current' => $progressRow->current ?? 0,
+                'meta' => $progressRow->meta ?? [],
+            ],
+        ]);
 
         AchievementProgress::query()->updateOrCreate(
             [
@@ -65,6 +77,7 @@ final readonly class AwardAchievement
             [
                 'current' => $progress->current,
                 'target' => $progress->target,
+                'meta' => $progress->meta,
             ],
         );
 
