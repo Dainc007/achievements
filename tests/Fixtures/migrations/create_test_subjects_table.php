@@ -13,6 +13,7 @@ return new class extends Migration
         Schema::create('test_subjects', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->nullable();
+            $table->unsignedInteger('score')->default(0);
             $table->timestamps();
         });
     }

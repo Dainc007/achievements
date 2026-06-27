@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dainc007\Achievements;
 
+use Dainc007\Achievements\Commands\RecalculateAchievements;
 use Dainc007\Achievements\Support\EvaluatorRegistry;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -18,7 +19,8 @@ final class AchievementsServiceProvider extends PackageServiceProvider
                 'create_achievements_table',
                 'create_achievement_awards_table',
                 'create_achievement_progress_table',
-            ]);
+            ])
+            ->hasCommand(RecalculateAchievements::class);
     }
 
     public function packageRegistered(): void
