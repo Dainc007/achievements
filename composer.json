@@ -43,7 +43,7 @@
         "test": "pest",
         "test-unit": "pest --group=unit",
         "lint": "pint",
-        "analyse": "phpstan analyse"
+        "analyse": "phpstan analyse --memory-limit=512M"
     },
     "config": {
         "sort-packages": true,
