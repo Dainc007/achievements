@@ -6,6 +6,7 @@ namespace Dainc007\Achievements;
 
 use Dainc007\Achievements\Commands\RecalculateAchievements;
 use Dainc007\Achievements\Commands\TickAchievements;
+use Dainc007\Achievements\Filament\Support\BadgeRendererRegistry;
 use Dainc007\Achievements\Support\EvaluatorRegistry;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -24,13 +25,16 @@ final class AchievementsServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 RecalculateAchievements::class,
                 TickAchievements::class,
-            ]);
+            ])
+            ->hasViews()
+            ->hasTranslations();
     }
 
     public function packageRegistered(): void
     {
-        // The registry is shared; the consuming app populates it with evaluators
-        // (config-driven + bespoke) in its own service provider.
+        // Shared registries; the consuming app populates them in its own provider
+        // (evaluators for the engine, per-category badge views for the UI).
         $this->app->singleton(EvaluatorRegistry::class, fn (): EvaluatorRegistry => new EvaluatorRegistry);
+        $this->app->singleton(BadgeRendererRegistry::class, fn (): BadgeRendererRegistry => new BadgeRendererRegistry);
     }
 }

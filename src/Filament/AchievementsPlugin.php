@@ -4,20 +4,28 @@ declare(strict_types=1);
 
 namespace Dainc007\Achievements\Filament;
 
+use Dainc007\Achievements\Filament\Pages\BadgeWall;
 use Dainc007\Achievements\Filament\Resources\AchievementResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
 /**
- * Registers the achievements admin UI on a Filament panel:
+ * Registers the achievements UI on a Filament panel:
  *
- *     $panel->plugin(AchievementsPlugin::make());
+ *     // admin panel — authoring only
+ *     $panel->plugin(AchievementsPlugin::make()->badgeWall(false));
  *
- * The badge-wall widget for the app panel is registered separately by the
- * consuming app (it chooses where it appears).
+ *     // app panel — badge wall only
+ *     $panel->plugin(AchievementsPlugin::make()->resources(false));
+ *
+ * Both are on by default; toggle per panel.
  */
 final class AchievementsPlugin implements Plugin
 {
+    private bool $registersResources = true;
+
+    private bool $registersBadgeWall = true;
+
     public function getId(): string
     {
         return 'achievements';
@@ -28,11 +36,33 @@ final class AchievementsPlugin implements Plugin
         return app(self::class);
     }
 
+    public function resources(bool $condition = true): static
+    {
+        $this->registersResources = $condition;
+
+        return $this;
+    }
+
+    public function badgeWall(bool $condition = true): static
+    {
+        $this->registersBadgeWall = $condition;
+
+        return $this;
+    }
+
     public function register(Panel $panel): void
     {
-        $panel->resources([
-            AchievementResource::class,
-        ]);
+        if ($this->registersResources) {
+            $panel->resources([
+                AchievementResource::class,
+            ]);
+        }
+
+        if ($this->registersBadgeWall) {
+            $panel->pages([
+                BadgeWall::class,
+            ]);
+        }
     }
 
     public function boot(Panel $panel): void

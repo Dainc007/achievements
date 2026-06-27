@@ -6,3 +6,9 @@ parameters:
     paths:
         - src
     tmpDir: .phpstan.cache
+    ignoreErrors:
+        # HasAchievements is public API for consuming apps (used on their User/Team
+        # models), so it is intentionally never used inside this package.
+        -
+            identifier: trait.unused
+            path: src/Concerns/HasAchievements.php
