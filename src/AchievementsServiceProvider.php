@@ -18,9 +18,9 @@ final class AchievementsServiceProvider extends PackageServiceProvider
         $package
             ->name('achievements')
             ->hasMigrations([
-                'create_achievements_table',
-                'create_achievement_awards_table',
-                'create_achievement_progress_table',
+                '2025_01_01_000001_create_achievements_table',
+                '2025_01_01_000002_create_achievement_awards_table',
+                '2025_01_01_000003_create_achievement_progress_table',
             ])
             ->runsMigrations()
             ->hasCommands([
