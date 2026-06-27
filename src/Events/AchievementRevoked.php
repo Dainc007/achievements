@@ -13,13 +13,13 @@ use Illuminate\Foundation\Events\Dispatchable;
  * Fired when a revocable award lapses (its condition is no longer met). The
  * award row is kept (soft-revoked via revoked_at) so history survives.
  */
-final class AchievementRevoked
+final readonly class AchievementRevoked
 {
     use Dispatchable;
 
     public function __construct(
-        public readonly Achievement $achievement,
-        public readonly Awardable $subject,
-        public readonly AchievementAward $award,
+        public Achievement $achievement,
+        public Awardable $subject,
+        public AchievementAward $award,
     ) {}
 }

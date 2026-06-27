@@ -27,7 +27,8 @@
         "laravel/pint": "^1.0",
         "orchestra/testbench": "^11.0",
         "pestphp/pest": "^4.0",
-        "pestphp/pest-plugin-laravel": "^4.0"
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "rector/rector": "^2.5"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +44,14 @@
         "test": "pest",
         "test-unit": "pest --group=unit",
         "lint": "pint",
-        "analyse": "phpstan analyse --memory-limit=512M"
+        "rector": "rector process",
+        "analyse": "phpstan analyse --memory-limit=512M",
+        "quality": [
+            "pint --test",
+            "rector process --dry-run",
+            "phpstan analyse --memory-limit=512M",
+            "pest"
+        ]
     },
     "config": {
         "sort-packages": true,

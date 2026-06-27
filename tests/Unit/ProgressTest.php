@@ -32,7 +32,7 @@ it('caps the percentage at 100 when over-achieved', function (): void {
 it('returns 0 percent for a zero target without dividing by zero', function (): void {
     expect(new Progress(current: 0, target: 0))
         ->percent()->toBe(0.0)
-        ->and((new Progress(current: 0, target: 0))->isComplete())->toBeTrue();
+        ->and(new Progress(current: 0, target: 0)->isComplete())->toBeTrue();
 });
 
 it('exposes current and target as readonly state', function (): void {

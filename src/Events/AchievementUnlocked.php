@@ -13,13 +13,13 @@ use Illuminate\Foundation\Events\Dispatchable;
  * Fired exactly once when a subject first completes an achievement. The
  * consuming app listens to this to notify, reward, or broadcast.
  */
-final class AchievementUnlocked
+final readonly class AchievementUnlocked
 {
     use Dispatchable;
 
     public function __construct(
-        public readonly Achievement $achievement,
-        public readonly Awardable $subject,
-        public readonly AchievementAward $award,
+        public Achievement $achievement,
+        public Awardable $subject,
+        public AchievementAward $award,
     ) {}
 }

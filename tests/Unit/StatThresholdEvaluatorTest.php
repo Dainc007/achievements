@@ -8,7 +8,7 @@ use Dainc007\Achievements\Evaluators\StatThresholdEvaluator;
 
 function subjectStub(string $key = 'user:1'): Awardable
 {
-    return new class($key) implements Awardable
+    return new readonly class($key) implements Awardable
     {
         public function __construct(private string $key) {}
 
@@ -70,6 +70,6 @@ it('treats a never-recorded stat as zero progress', function (): void {
 });
 
 it('rejects config missing a stat key', function (): void {
-    (new StatThresholdEvaluator(statResolverStub([])))
+    new StatThresholdEvaluator(statResolverStub([]))
         ->progress(subjectStub(), ['config' => ['target' => 10]]);
 })->throws(InvalidArgumentException::class);
