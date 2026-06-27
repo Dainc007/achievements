@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('tier')->nullable();
             $table->string('category')->nullable();
             $table->boolean('is_progressive')->default(false);
+            $table->string('retention')->default('permanent');
             $table->unsignedInteger('points')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int $subject_id
  * @property int $current
  * @property int $target
+ * @property array<string, mixed>|null $meta
  */
 final class AchievementProgress extends Model
 {
@@ -49,6 +50,7 @@ final class AchievementProgress extends Model
         return [
             'current' => 'integer',
             'target' => 'integer',
+            'meta' => 'array',
         ];
     }
 }

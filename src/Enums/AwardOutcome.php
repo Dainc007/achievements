@@ -17,4 +17,7 @@ enum AwardOutcome: string
 
     /** The subject already held this award; nothing changed. */
     case AlreadyAwarded = 'already_awarded';
+
+    /** A revocable award lapsed and was soft-revoked; AchievementRevoked fired. */
+    case Revoked = 'revoked';
 }

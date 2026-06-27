@@ -18,6 +18,8 @@ use Illuminate\Support\Carbon;
  * @property string $subject_type
  * @property int $subject_id
  * @property Carbon $awarded_at
+ * @property Carbon|null $revoked_at
+ * @property array<string, mixed>|null $context
  */
 final class AchievementAward extends Model
 {
@@ -46,6 +48,8 @@ final class AchievementAward extends Model
     {
         return [
             'awarded_at' => 'datetime',
+            'revoked_at' => 'datetime',
+            'context' => 'array',
         ];
     }
 }

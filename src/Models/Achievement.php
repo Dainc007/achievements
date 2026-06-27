@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dainc007\Achievements\Models;
 
+use Dainc007\Achievements\Enums\Retention;
 use Dainc007\Achievements\Enums\Tier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Tier|null $tier
  * @property string|null $category
  * @property bool $is_progressive
+ * @property Retention $retention
  * @property int|null $points
  * @property bool $is_active
  */
@@ -53,6 +55,7 @@ final class Achievement extends Model
         return [
             'config' => 'array',
             'tier' => Tier::class,
+            'retention' => Retention::class,
             'is_progressive' => 'boolean',
             'is_active' => 'boolean',
             'points' => 'integer',

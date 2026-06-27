@@ -6,6 +6,8 @@ namespace Dainc007\Achievements\Actions;
 
 use Dainc007\Achievements\Domain\Awardable;
 use Dainc007\Achievements\Enums\AwardOutcome;
+use Dainc007\Achievements\Enums\Retention;
+use Dainc007\Achievements\Events\AchievementRevoked;
 use Dainc007\Achievements\Events\AchievementUnlocked;
 use Dainc007\Achievements\Models\Achievement;
 use Dainc007\Achievements\Models\AchievementAward;
@@ -36,13 +38,17 @@ final readonly class AwardAchievement
         $subjectType = $subject->getMorphClass();
         $subjectId = $subject->getKey();
 
-        $alreadyAwarded = AchievementAward::query()
+        $activeAward = AchievementAward::query()
             ->where('achievement_id', $achievement->getKey())
             ->where('subject_type', $subjectType)
             ->where('subject_id', $subjectId)
-            ->exists();
+            ->whereNull('revoked_at')
+            ->first();
 
-        if ($alreadyAwarded) {
+        $isRevocable = $achievement->retention === Retention::Revocable;
+
+        // Permanent achievements never need re-evaluating once held.
+        if ($activeAward !== null && ! $isRevocable) {
             return AwardOutcome::AlreadyAwarded;
         }
 
@@ -62,24 +68,43 @@ final readonly class AwardAchievement
             ],
         );
 
-        if (! $progress->isComplete()) {
-            return AwardOutcome::Progressed;
+        if ($progress->isComplete()) {
+            if ($activeAward !== null) {
+                return AwardOutcome::AlreadyAwarded;
+            }
+
+            return $this->award($achievement, $subject, $subjectType, $subjectId, $context);
         }
 
-        $award = AchievementAward::query()->firstOrCreate(
-            [
-                'achievement_id' => $achievement->getKey(),
-                'subject_type' => $subjectType,
-                'subject_id' => $subjectId,
-            ],
-            [
-                'awarded_at' => now(),
-            ],
-        );
+        // Not complete: a held revocable award has lapsed and must be revoked.
+        if ($isRevocable && $activeAward !== null) {
+            $activeAward->update(['revoked_at' => now()]);
 
-        if (! $award->wasRecentlyCreated) {
-            return AwardOutcome::AlreadyAwarded;
+            AchievementRevoked::dispatch($achievement, $subject, $activeAward);
+
+            return AwardOutcome::Revoked;
         }
+
+        return AwardOutcome::Progressed;
+    }
+
+    /**
+     * @param  array<string, mixed>  $context
+     */
+    private function award(
+        Achievement $achievement,
+        Model&Awardable $subject,
+        string $subjectType,
+        int|string $subjectId,
+        array $context,
+    ): AwardOutcome {
+        $award = AchievementAward::create([
+            'achievement_id' => $achievement->getKey(),
+            'subject_type' => $subjectType,
+            'subject_id' => $subjectId,
+            'awarded_at' => now(),
+            'context' => $context['context'] ?? null,
+        ]);
 
         AchievementUnlocked::dispatch($achievement, $subject, $award);
 

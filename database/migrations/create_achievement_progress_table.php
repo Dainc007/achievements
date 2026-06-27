@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('subject_id');
             $table->unsignedInteger('current')->default(0);
             $table->unsignedInteger('target');
+            $table->json('meta')->nullable();
             $table->timestamps();
 
             $table->unique(['achievement_id', 'subject_type', 'subject_id'], 'achievement_progress_unique_subject');
