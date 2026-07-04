@@ -93,7 +93,8 @@ final class AchievementResource extends Resource
                         ->label(__('achievements::achievements.form.category'))
                         ->maxLength(255),
                 ])
-                ->columns(2),
+                ->columns(2)
+                ->columnSpanFull(),
 
             Section::make(__('achievements::achievements.form.section_terms'))
                 ->icon('heroicon-o-adjustments-horizontal')
@@ -126,7 +127,8 @@ final class AchievementResource extends Resource
                         ->visible(fn (Get $get): bool => $get('type') === 'stat_threshold')
                         ->required(fn (Get $get): bool => $get('type') === 'stat_threshold'),
                 ])
-                ->columns(2),
+                ->columns(2)
+                ->columnSpanFull(),
 
             Section::make(__('achievements::achievements.form.section_presentation'))
                 ->icon('heroicon-o-sparkles')
@@ -162,7 +164,8 @@ final class AchievementResource extends Resource
                         ->minValue(0)
                         ->helperText(__('achievements::achievements.form.points_help')),
                 ])
-                ->columns(2),
+                ->columns(2)
+                ->columnSpanFull(),
 
             Section::make(__('achievements::achievements.form.section_behaviour'))
                 ->icon('heroicon-o-cog-6-tooth')
@@ -177,7 +180,8 @@ final class AchievementResource extends Resource
                         ->label(__('achievements::achievements.form.is_active'))
                         ->default(true),
                 ])
-                ->columns(2),
+                ->columns(2)
+                ->columnSpanFull(),
         ]);
     }
 
