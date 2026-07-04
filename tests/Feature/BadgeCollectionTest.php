@@ -104,3 +104,49 @@ it('shows an empty subject every achievement as unearned', function (): void {
     expect($badges)->toHaveCount(2)
         ->and($badges->every(fn (Badge $b): bool => ! $b->earned))->toBeTrue();
 });
+
+it('paginates so a large catalogue renders one page at a time', function (): void {
+    $subject = TestSubject::create(['name' => 'Ada']);
+
+    foreach (range(1, 30) as $i) {
+        achievementNamed('ach_'.str_pad((string) $i, 2, '0', STR_PAD_LEFT));
+    }
+
+    $page = BadgeCollection::paginateFor($subject, perPage: 12);
+
+    expect($page->total())->toBe(30)
+        ->and($page->perPage())->toBe(12)
+        ->and($page->items())->toHaveCount(12)
+        ->and($page->lastPage())->toBe(3)
+        ->and($page->first())->toBeInstanceOf(Badge::class);
+});
+
+it('filters the paginated wall by search term (name or key)', function (): void {
+    $subject = TestSubject::create(['name' => 'Ada']);
+    achievementNamed('globetrotter');
+    achievementNamed('journeyman');
+
+    $page = BadgeCollection::paginateFor($subject, search: 'globe');
+
+    expect($page->total())->toBe(1)
+        ->and($page->first()->achievement->key)->toBe('globetrotter');
+});
+
+it('sorts earned badges first by default', function (): void {
+    $subject = TestSubject::create(['name' => 'Ada']);
+    achievementNamed('aaa_locked');
+    $earned = achievementNamed('zzz_earned');
+
+    AchievementAward::create([
+        'achievement_id' => $earned->id,
+        'subject_type' => $subject->getMorphClass(),
+        'subject_id' => $subject->id,
+        'awarded_at' => now(),
+    ]);
+
+    $page = BadgeCollection::paginateFor($subject, sort: 'status');
+
+    // Earned "zzz_earned" outranks the alphabetically-first locked one.
+    expect($page->first()->achievement->key)->toBe('zzz_earned')
+        ->and($page->first()->earned)->toBeTrue();
+});
