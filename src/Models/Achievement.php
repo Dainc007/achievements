@@ -6,6 +6,8 @@ namespace Dainc007\Achievements\Models;
 
 use Dainc007\Achievements\Enums\Retention;
 use Dainc007\Achievements\Enums\Tier;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
@@ -80,6 +82,25 @@ final class Achievement extends Model
         return $value[app()->getLocale()]
             ?? $value[$fallback]
             ?? Arr::first($value, static fn (mixed $v): bool => filled($v));
+    }
+
+    /**
+     * Active achievements whose config watches the given stat key — either as
+     * the tracked stat or a ratio's denominator. Lets an event re-check only the
+     * badges that could possibly change, instead of every active achievement.
+     *
+     * @param  Builder<Achievement>  $query
+     * @return Builder<Achievement>
+     */
+    #[Scope]
+    protected function watchingStat(Builder $query, string $statKey): Builder
+    {
+        return $query
+            ->where('is_active', true)
+            ->where(function (Builder $q) use ($statKey): void {
+                $q->where('config->stat', $statKey)
+                    ->orWhere('config->per', $statKey);
+            });
     }
 
     /**

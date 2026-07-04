@@ -69,6 +69,18 @@ it('falls back to the app fallback locale, then the key', function (): void {
         ->and($keyless->displayName)->toBe('Nur Deutsch');
 });
 
+it('scopes to active achievements watching a given stat (as stat or ratio denominator)', function (): void {
+    Achievement::create(['key' => 'a', 'name' => ['en' => 'A'], 'type' => 'stat_threshold', 'config' => ['stat' => 'games_won', 'target' => 10]]);
+    Achievement::create(['key' => 'b', 'name' => ['en' => 'B'], 'type' => 'ratio', 'config' => ['stat' => 'games_won', 'per' => 'games_played', 'target' => 70, 'min' => 100]]);
+    Achievement::create(['key' => 'c', 'name' => ['en' => 'C'], 'type' => 'stat_threshold', 'config' => ['stat' => 'contracts_total', 'target' => 3]]);
+    Achievement::create(['key' => 'd', 'name' => ['en' => 'D'], 'type' => 'stat_threshold', 'config' => ['stat' => 'games_won', 'target' => 5], 'is_active' => false]);
+
+    expect(Achievement::watchingStat('games_won')->pluck('key')->sort()->values()->all())
+        ->toBe(['a', 'b']) // 'c' watches a different stat, 'd' is inactive
+        ->and(Achievement::watchingStat('games_played')->pluck('key')->all())
+        ->toBe(['b']); // matched via the ratio denominator
+});
+
 it('enforces a unique achievement key', function (): void {
     Achievement::create(['key' => 'dupe', 'name' => 'One', 'type' => 'stat_threshold']);
     Achievement::create(['key' => 'dupe', 'name' => 'Two', 'type' => 'stat_threshold']);
