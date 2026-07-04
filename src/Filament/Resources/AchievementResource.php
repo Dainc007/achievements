@@ -26,6 +26,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -173,19 +174,22 @@ final class AchievementResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('key')
-                    ->label(__('achievements::achievements.table.key'))
-                    ->searchable()
-                    ->sortable(),
+                IconColumn::make('icon')
+                    ->label('')
+                    ->icon(fn (Achievement $record): string => BadgeIcon::resolve($record->icon))
+                    ->color(fn (Achievement $record): string|array => self::tierColor($record->tier)),
                 TextColumn::make('name')
                     ->label(__('achievements::achievements.table.name'))
-                    ->searchable(),
+                    ->description(fn (Achievement $record): string => $record->key)
+                    ->searchable(['name', 'key'])
+                    ->sortable(),
                 TextColumn::make('type')
                     ->label(__('achievements::achievements.table.type'))
                     ->badge(),
                 TextColumn::make('tier')
                     ->label(__('achievements::achievements.table.tier'))
                     ->badge()
+                    ->color(fn (?Tier $state): string|array => self::tierColor($state))
                     ->placeholder('—'),
                 TextColumn::make('retention')
                     ->label(__('achievements::achievements.table.retention'))
@@ -262,5 +266,21 @@ final class AchievementResource extends Resource
         $disk = config('achievements.image_disk');
 
         return is_string($disk) && $disk !== '' ? $disk : 'public';
+    }
+
+    /**
+     * Tier → table badge/icon colour.
+     *
+     * @return string|array<int, string>
+     */
+    private static function tierColor(?Tier $tier): string|array
+    {
+        return match ($tier) {
+            Tier::Bronze => Color::Amber,
+            Tier::Silver => Color::Slate,
+            Tier::Gold => Color::Yellow,
+            Tier::Legendary => Color::Purple,
+            default => 'gray',
+        };
     }
 }
