@@ -5,9 +5,21 @@ declare(strict_types=1);
 return [
     'nav_label' => 'Achievements',
     'title' => 'Achievements',
+    'model_label' => 'achievement',
+    'plural_label' => 'Achievements',
     'earned' => 'Earned',
     'locked' => 'Locked',
     'empty' => 'No achievements yet — start playing to earn your first badge.',
+
+    'table' => [
+        'key' => 'Key',
+        'name' => 'Name',
+        'type' => 'Type',
+        'tier' => 'Tier',
+        'retention' => 'Retention',
+        'is_progressive' => 'Progressive',
+        'is_active' => 'Active',
+    ],
 
     'form' => [
         'section_definition' => 'Definition',

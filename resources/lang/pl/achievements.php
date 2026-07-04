@@ -5,9 +5,21 @@ declare(strict_types=1);
 return [
     'nav_label' => 'Osiągnięcia',
     'title' => 'Osiągnięcia',
+    'model_label' => 'osiągnięcie',
+    'plural_label' => 'Osiągnięcia',
     'earned' => 'Zdobyto',
     'locked' => 'Zablokowane',
     'empty' => 'Brak osiągnięć — zacznij grać, aby zdobyć pierwszą odznakę.',
+
+    'table' => [
+        'key' => 'Klucz',
+        'name' => 'Nazwa',
+        'type' => 'Typ',
+        'tier' => 'Poziom',
+        'retention' => 'Trwałość',
+        'is_progressive' => 'Progresywne',
+        'is_active' => 'Aktywne',
+    ],
 
     'form' => [
         'section_definition' => 'Definicja',
