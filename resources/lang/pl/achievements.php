@@ -50,15 +50,15 @@ return [
         'section_definition' => 'Definicja',
         'section_terms' => 'Kiedy jest przyznawane',
         'terms_hint' => 'Najpierw wybierz typ powyżej — pojawią się tu jego ustawienia.',
-        'section_presentation' => 'Jak wygląda',
+        'section_presentation' => 'Wygląd',
         'section_behaviour' => 'Zachowanie',
 
         'key' => 'Klucz',
         'key_help' => 'Stały identyfikator, np. „goal_machine". Musi być unikalny.',
         'name' => 'Nazwa',
         'description' => 'Opis',
-        'type' => 'Typ',
-        'type_help' => 'Sposób mierzenia postępu.',
+        'type' => 'Sposób przyznawania',
+        'type_help' => 'Jak mierzony jest postęp: „Próg statystyki" przyznaje po osiągnięciu wartości licznika (np. 10 kontraktów).',
         'category' => 'Kategoria',
 
         'stat' => 'Statystyka',
@@ -69,8 +69,12 @@ return [
         'config' => 'Konfiguracja',
         'config_help' => 'Ustawienia dla tego typu ewaluatora.',
 
+        'badge_source' => 'Źródło odznaki',
+        'badge_source_icon' => 'Ikona',
+        'badge_source_image' => 'Własny obraz',
+
         'icon' => 'Ikona',
-        'icon_help' => 'Nazwa ikony Heroicon, np. „heroicon-o-trophy". Zostaw puste, aby użyć domyślnej, lub wgraj obraz poniżej.',
+        'icon_help' => 'Nazwa ikony Heroicon, np. „heroicon-o-trophy". Zostaw puste, aby użyć domyślnej.',
         'icon_invalid' => 'Taka ikona nie istnieje. Użyj prawidłowej nazwy Heroicon, np. „heroicon-o-trophy".',
         'image' => 'Własny obraz',
         'image_help' => 'Opcjonalne. Ma pierwszeństwo przed ikoną, gdy ustawione.',
