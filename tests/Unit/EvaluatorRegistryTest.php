@@ -46,3 +46,15 @@ it('overwrites a previously registered type', function (): void {
 
     expect($registry->get('stat_threshold'))->toBe($second);
 });
+
+it('lists registered type keys for the type picker', function (): void {
+    $registry = (new EvaluatorRegistry)
+        ->register('stat_threshold', fakeEvaluator())
+        ->register('streak', fakeEvaluator());
+
+    expect($registry->keys())->toBe(['stat_threshold', 'streak']);
+});
+
+it('lists no keys when nothing is registered', function (): void {
+    expect((new EvaluatorRegistry)->keys())->toBe([]);
+});
