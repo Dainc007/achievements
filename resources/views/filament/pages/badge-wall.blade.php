@@ -16,7 +16,7 @@
         </x-filament::section>
     @else
         {{-- Summary band: overall progress + headline counts --}}
-        <div class="rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+        <div class="rounded-xl bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950 p-5 ring-1 ring-white/10 sm:p-6">
             <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-4">
                     {{-- Completion ring --}}
@@ -38,7 +38,7 @@
 
                 <div class="grid grid-cols-3 gap-3 sm:gap-6">
                     <div class="text-center">
-                        <p class="text-2xl font-bold text-emerald-400">{{ $earnedCount }}<span class="text-base font-medium text-gray-500">/{{ $total }}</span></p>
+                        <p class="text-2xl font-bold text-primary-400">{{ $earnedCount }}<span class="text-base font-medium text-gray-500">/{{ $total }}</span></p>
                         <p class="text-xs font-medium uppercase tracking-wide text-gray-500">{{ __('achievements::achievements.summary.earned') }}</p>
                     </div>
                     <div class="text-center">
