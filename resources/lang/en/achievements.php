@@ -50,15 +50,15 @@ return [
         'section_definition' => 'Definition',
         'section_terms' => 'When it is awarded',
         'terms_hint' => 'Pick a type above first — its settings will appear here.',
-        'section_presentation' => 'How it looks',
+        'section_presentation' => 'Appearance',
         'section_behaviour' => 'Behaviour',
 
         'key' => 'Key',
         'key_help' => 'Stable identifier, e.g. "goal_machine". Must be unique.',
         'name' => 'Name',
         'description' => 'Description',
-        'type' => 'Type',
-        'type_help' => 'How progress is measured.',
+        'type' => 'How it is awarded',
+        'type_help' => 'How progress is measured: "Stat threshold" awards when a counter reaches a value (e.g. 10 contracts).',
         'category' => 'Category',
 
         'stat' => 'Stat',
@@ -69,8 +69,12 @@ return [
         'config' => 'Configuration',
         'config_help' => 'Settings for this evaluator type.',
 
+        'badge_source' => 'Badge source',
+        'badge_source_icon' => 'Icon',
+        'badge_source_image' => 'Custom image',
+
         'icon' => 'Icon',
-        'icon_help' => 'A Heroicon name, e.g. "heroicon-o-trophy". Leave empty for the default, or upload an image below.',
+        'icon_help' => 'A Heroicon name, e.g. "heroicon-o-trophy". Leave empty for the default.',
         'icon_invalid' => 'That icon does not exist. Use a valid Heroicon name like "heroicon-o-trophy".',
         'image' => 'Custom image',
         'image_help' => 'Optional. Takes precedence over the icon when set.',

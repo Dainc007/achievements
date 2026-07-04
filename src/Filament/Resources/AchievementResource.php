@@ -23,9 +23,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\IconColumn;
@@ -73,6 +75,9 @@ final class AchievementResource extends Resource
                         ->required()
                         ->maxLength(255)
                         ->unique(ignoreRecord: true)
+                        // Live (on blur) so Filament reports "already taken" as you
+                        // leave the field, not only after submitting.
+                        ->live(onBlur: true)
                         ->helperText(__('achievements::achievements.form.key_help')),
                     TextInput::make('name')
                         ->label(__('achievements::achievements.form.name'))
@@ -89,9 +94,6 @@ final class AchievementResource extends Resource
                         ->native(false)
                         ->live()
                         ->helperText(__('achievements::achievements.form.type_help')),
-                    TextInput::make('category')
-                        ->label(__('achievements::achievements.form.category'))
-                        ->maxLength(255),
                 ])
                 ->columns(2)
                 ->columnSpanFull(),
@@ -133,10 +135,32 @@ final class AchievementResource extends Resource
             Section::make(__('achievements::achievements.form.section_presentation'))
                 ->icon('heroicon-o-sparkles')
                 ->schema([
+                    // Pick ONE badge source; only the chosen field shows. The other
+                    // is force-dehydrated to null so switching actually clears it.
+                    ToggleButtons::make('badge_source')
+                        ->label(__('achievements::achievements.form.badge_source'))
+                        ->options([
+                            'icon' => __('achievements::achievements.form.badge_source_icon'),
+                            'image' => __('achievements::achievements.form.badge_source_image'),
+                        ])
+                        ->icons([
+                            'icon' => 'heroicon-o-sparkles',
+                            'image' => 'heroicon-o-photo',
+                        ])
+                        ->inline()
+                        ->default(fn (?Achievement $record): string => $record?->image ? 'image' : 'icon')
+                        ->dehydrated(false)
+                        ->live()
+                        ->afterStateUpdated(function (string $state, Set $set): void {
+                            $set($state === 'icon' ? 'image' : 'icon', null);
+                        })
+                        ->columnSpanFull(),
                     TextInput::make('icon')
                         ->label(__('achievements::achievements.form.icon'))
                         ->maxLength(255)
                         ->helperText(__('achievements::achievements.form.icon_help'))
+                        ->visible(fn (Get $get): bool => $get('badge_source') === 'icon')
+                        ->dehydrated(true)
                         // Outer closure returns the Laravel rule so Filament does
                         // not try to dependency-inject the rule's ($attribute…) args.
                         ->rules([
@@ -152,7 +176,9 @@ final class AchievementResource extends Resource
                         ->image()
                         ->disk(self::imageDisk())
                         ->visibility('public')
-                        ->directory('achievement-badges'),
+                        ->directory('achievement-badges')
+                        ->visible(fn (Get $get): bool => $get('badge_source') === 'image')
+                        ->dehydrated(true),
                     Select::make('tier')
                         ->label(__('achievements::achievements.form.tier'))
                         ->options(self::tierOptions()),
