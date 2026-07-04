@@ -1,20 +1,20 @@
 <x-filament-panels::page>
-    @php($registry = app(\Dainc007\Achievements\Filament\Support\BadgeRendererRegistry::class))
-    @php($badges = $this->getBadges())
+    @php
+        $registry = app(\Dainc007\Achievements\Filament\Support\BadgeRendererRegistry::class);
+        $badges = $this->getBadges();
+
+        $total = $badges->count();
+        $earnedCount = $badges->where('earned', true)->count();
+        $inProgressCount = $badges->filter->isInProgress()->count();
+        $points = $badges->where('earned', true)->sum(fn ($b) => (int) ($b->achievement->points ?? 0));
+        $percent = $total > 0 ? (int) round($earnedCount / $total * 100) : 0;
+    @endphp
 
     @if ($badges->isEmpty())
         <x-filament::section>
             {{ __('achievements::achievements.empty') }}
         </x-filament::section>
     @else
-        @php
-            $total = $badges->count();
-            $earnedCount = $badges->where('earned', true)->count();
-            $inProgressCount = $badges->filter->isInProgress()->count();
-            $points = $badges->where('earned', true)->sum(fn ($b) => (int) ($b->achievement->points ?? 0));
-            $percent = $total > 0 ? (int) round($earnedCount / $total * 100) : 0;
-        @endphp
-
         {{-- Summary band: overall progress + headline counts --}}
         <div class="rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
             <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
