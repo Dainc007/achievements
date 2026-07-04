@@ -20,18 +20,25 @@ final class BadgeIcon
 {
     public static function resolve(?string $icon): string
     {
-        $fallback = self::fallback();
-
-        if ($icon === null || $icon === '') {
-            return $fallback;
+        if ($icon !== null && $icon !== '' && self::exists($icon)) {
+            return $icon;
         }
 
+        return self::fallback();
+    }
+
+    /**
+     * Whether an icon name resolves to a registered SVG. Used both to render
+     * safely and to validate the icon field before an achievement is saved.
+     */
+    public static function exists(string $icon): bool
+    {
         try {
             app(Factory::class)->svg($icon);
 
-            return $icon;
+            return true;
         } catch (Throwable) {
-            return $fallback;
+            return false;
         }
     }
 

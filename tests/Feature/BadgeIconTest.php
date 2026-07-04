@@ -22,3 +22,8 @@ it('honours a configured fallback icon', function (): void {
 
     expect(BadgeIcon::resolve('not-a-real-icon'))->toBe('heroicon-o-star');
 });
+
+it('reports whether an icon is registered (used to validate the form)', function (): void {
+    expect(BadgeIcon::exists('heroicon-o-trophy'))->toBeTrue()
+        ->and(BadgeIcon::exists('dsada'))->toBeFalse();
+});

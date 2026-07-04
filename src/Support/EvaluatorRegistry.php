@@ -29,6 +29,16 @@ final class EvaluatorRegistry
         return isset($this->evaluators[$type]);
     }
 
+    /**
+     * Registered evaluator type keys, for building a "type" picker in the UI.
+     *
+     * @return list<string>
+     */
+    public function keys(): array
+    {
+        return array_keys($this->evaluators);
+    }
+
     public function get(string $type): Evaluator
     {
         return $this->evaluators[$type] ?? throw UnknownEvaluator::forType($type);
