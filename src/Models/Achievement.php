@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $type
  * @property array<string, mixed>|null $config
  * @property string|null $icon
+ * @property string|null $image
  * @property Tier|null $tier
  * @property string|null $category
  * @property bool $is_progressive

@@ -1,4 +1,7 @@
 @php($achievement = $badge->achievement)
+@php($imageUrl = $achievement->image
+    ? \Illuminate\Support\Facades\Storage::disk(config('achievements.image_disk', 'public'))->url($achievement->image)
+    : null)
 
 <div @class([
     'rounded-xl border p-4 shadow-sm transition',
@@ -6,9 +9,18 @@
     'border-gray-200 bg-white dark:border-white/10 dark:bg-white/5' => ! $badge->earned,
 ])>
     <div class="flex items-center gap-3">
-        @if ($achievement->icon)
+        @if ($imageUrl)
+            <img
+                src="{{ $imageUrl }}"
+                alt="{{ $achievement->name }}"
+                @class([
+                    'h-8 w-8 shrink-0 rounded object-cover',
+                    'opacity-40 grayscale' => ! $badge->earned,
+                ])
+            />
+        @else
             <x-filament::icon
-                :icon="$achievement->icon"
+                :icon="\Dainc007\Achievements\Filament\Support\BadgeIcon::resolve($achievement->icon)"
                 @class([
                     'h-8 w-8 shrink-0',
                     'text-amber-500' => $badge->earned,

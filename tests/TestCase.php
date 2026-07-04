@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dainc007\Achievements\Tests;
 
+use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Dainc007\Achievements\AchievementsServiceProvider;
 use Dainc007\Achievements\Tests\Fixtures\Panel\AdminPanelProvider;
@@ -34,6 +35,7 @@ abstract class TestCase extends Orchestra
         return [
             // Filament core stack (composer-installed packages are not auto-discovered under Testbench).
             BladeIconsServiceProvider::class,
+            BladeHeroiconsServiceProvider::class,
             LivewireServiceProvider::class,
             SupportServiceProvider::class,
             ActionsServiceProvider::class,

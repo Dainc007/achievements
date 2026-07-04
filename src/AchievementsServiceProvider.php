@@ -17,10 +17,12 @@ final class AchievementsServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('achievements')
+            ->hasConfigFile()
             ->hasMigrations([
                 '2025_01_01_000001_create_achievements_table',
                 '2025_01_01_000002_create_achievement_awards_table',
                 '2025_01_01_000003_create_achievement_progress_table',
+                '2025_01_01_000004_add_image_to_achievements_table',
             ])
             ->runsMigrations()
             ->hasCommands([
