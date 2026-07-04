@@ -53,8 +53,11 @@ final class BadgeCollection
         $query = Achievement::query()->where('is_active', true);
 
         if ($search !== '') {
-            $query->where(function (Builder $q) use ($search): void {
-                $q->where('name', 'like', '%'.$search.'%')
+            // name is a per-locale JSON map; match the active locale's value.
+            $locale = app()->getLocale();
+
+            $query->where(function (Builder $q) use ($search, $locale): void {
+                $q->where('name->'.$locale, 'like', '%'.$search.'%')
                     ->orWhere('key', 'like', '%'.$search.'%');
             });
         }

@@ -32,6 +32,43 @@ it('persists an achievement with casted attributes', function (): void {
         ->and($fresh->points)->toBeNull();
 });
 
+it('stores name/description per locale and resolves the active one', function (): void {
+    $achievement = Achievement::create([
+        'key' => 'bilingual',
+        'name' => ['en' => 'Sign a contract', 'pl' => 'Podpisz kontrakt'],
+        'description' => ['en' => 'Join a team.', 'pl' => 'Dołącz do drużyny.'],
+        'type' => 'stat_threshold',
+    ])->fresh();
+
+    app()->setLocale('pl');
+    expect($achievement->displayName)->toBe('Podpisz kontrakt')
+        ->and($achievement->displayDescription)->toBe('Dołącz do drużyny.');
+
+    app()->setLocale('en');
+    expect($achievement->displayName)->toBe('Sign a contract');
+});
+
+it('falls back to the app fallback locale, then the key', function (): void {
+    config()->set('app.fallback_locale', 'en');
+
+    $named = Achievement::create([
+        'key' => 'fallback_named',
+        'name' => ['en' => 'Only English'],
+        'type' => 'stat_threshold',
+    ])->fresh();
+
+    $keyless = Achievement::create([
+        'key' => 'no_name_locale',
+        'name' => ['de' => 'Nur Deutsch'],
+        'type' => 'stat_threshold',
+    ])->fresh();
+
+    app()->setLocale('pl'); // unset locale → fallback, then any value
+
+    expect($named->displayName)->toBe('Only English')
+        ->and($keyless->displayName)->toBe('Nur Deutsch');
+});
+
 it('enforces a unique achievement key', function (): void {
     Achievement::create(['key' => 'dupe', 'name' => 'One', 'type' => 'stat_threshold']);
     Achievement::create(['key' => 'dupe', 'name' => 'Two', 'type' => 'stat_threshold']);

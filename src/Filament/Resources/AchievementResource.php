@@ -26,6 +26,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -35,6 +36,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 final class AchievementResource extends Resource
@@ -79,14 +81,6 @@ final class AchievementResource extends Resource
                         // leave the field, not only after submitting.
                         ->live(onBlur: true)
                         ->helperText(__('achievements::achievements.form.key_help')),
-                    TextInput::make('name')
-                        ->label(__('achievements::achievements.form.name'))
-                        ->required()
-                        ->maxLength(255),
-                    Textarea::make('description')
-                        ->label(__('achievements::achievements.form.description'))
-                        ->rows(2)
-                        ->columnSpanFull(),
                     Select::make('type')
                         ->label(__('achievements::achievements.form.type'))
                         ->options(self::evaluatorOptions())
@@ -94,6 +88,8 @@ final class AchievementResource extends Resource
                         ->native(false)
                         ->live()
                         ->helperText(__('achievements::achievements.form.type_help')),
+                    // name + description authored per locale (stored as JSON maps).
+                    self::translatableTextFields(),
                 ])
                 ->columns(2)
                 ->columnSpanFull(),
@@ -222,9 +218,16 @@ final class AchievementResource extends Resource
                     ->color(fn (Achievement $record): string|array => self::tierColor($record->tier)),
                 TextColumn::make('name')
                     ->label(__('achievements::achievements.table.name'))
+                    ->state(fn (Achievement $record): string => $record->displayName)
                     ->description(fn (Achievement $record): string => $record->key)
-                    ->searchable(['name', 'key'])
-                    ->sortable(),
+                    // name is a per-locale JSON map — search the active locale's
+                    // value (and the key), not the raw JSON (which holds locale codes).
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->where(
+                        fn (Builder $q): Builder => $q
+                            ->where('name->'.app()->getLocale(), 'like', '%'.$search.'%')
+                            ->orWhere('key', 'like', '%'.$search.'%')
+                    ))
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy('key', $direction)),
                 TextColumn::make('type')
                     ->label(__('achievements::achievements.table.type'))
                     ->badge()
@@ -267,6 +270,48 @@ final class AchievementResource extends Resource
             'create' => CreateAchievement::route('/create'),
             'edit' => EditAchievement::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * A tabbed name + description editor, one tab per configured locale. Each
+     * field binds to the JSON map (e.g. name.pl), so an admin authors every
+     * language the app supports. The fallback locale's name is required.
+     */
+    private static function translatableTextFields(): Tabs
+    {
+        $default = self::defaultLocale();
+
+        return Tabs::make('translations')
+            ->tabs(array_map(
+                fn (string $locale): Tabs\Tab => Tabs\Tab::make(mb_strtoupper($locale))
+                    ->schema([
+                        TextInput::make("name.{$locale}")
+                            ->label(__('achievements::achievements.form.name'))
+                            ->required($locale === $default)
+                            ->maxLength(255),
+                        Textarea::make("description.{$locale}")
+                            ->label(__('achievements::achievements.form.description'))
+                            ->rows(2),
+                    ]),
+                self::locales(),
+            ))
+            ->columnSpanFull();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function locales(): array
+    {
+        /** @var list<string> $locales */
+        $locales = config('achievements.locales');
+
+        return $locales === [] ? [self::defaultLocale()] : $locales;
+    }
+
+    private static function defaultLocale(): string
+    {
+        return (string) (config('app.fallback_locale') ?: 'en');
     }
 
     /**
