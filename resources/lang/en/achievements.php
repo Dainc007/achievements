@@ -11,6 +11,31 @@ return [
     'locked' => 'Locked',
     'empty' => 'No achievements yet — start playing to earn your first badge.',
 
+    'summary' => [
+        'earned' => 'Earned',
+        'in_progress' => 'In progress',
+        'points' => 'Points',
+        'completion' => ':percent% complete',
+    ],
+
+    'tiers' => [
+        'bronze' => 'Bronze',
+        'silver' => 'Silver',
+        'gold' => 'Gold',
+        'legendary' => 'Legendary',
+    ],
+
+    'retentions' => [
+        'permanent' => 'Permanent',
+        'revocable' => 'Revocable',
+    ],
+
+    'types' => [
+        'stat_threshold' => 'Stat threshold',
+        'accumulator' => 'Accumulator',
+        'streak' => 'Streak',
+    ],
+
     'table' => [
         'key' => 'Key',
         'name' => 'Name',
@@ -24,6 +49,7 @@ return [
     'form' => [
         'section_definition' => 'Definition',
         'section_terms' => 'When it is awarded',
+        'terms_hint' => 'Pick a type above first — its settings will appear here.',
         'section_presentation' => 'How it looks',
         'section_behaviour' => 'Behaviour',
 

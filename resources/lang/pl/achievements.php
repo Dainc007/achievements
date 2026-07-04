@@ -11,6 +11,31 @@ return [
     'locked' => 'Zablokowane',
     'empty' => 'Brak osiągnięć — zacznij grać, aby zdobyć pierwszą odznakę.',
 
+    'summary' => [
+        'earned' => 'Zdobyte',
+        'in_progress' => 'W trakcie',
+        'points' => 'Punkty',
+        'completion' => 'Ukończono :percent%',
+    ],
+
+    'tiers' => [
+        'bronze' => 'Brąz',
+        'silver' => 'Srebro',
+        'gold' => 'Złoto',
+        'legendary' => 'Legenda',
+    ],
+
+    'retentions' => [
+        'permanent' => 'Trwałe',
+        'revocable' => 'Odwoływalne',
+    ],
+
+    'types' => [
+        'stat_threshold' => 'Próg statystyki',
+        'accumulator' => 'Akumulator',
+        'streak' => 'Seria',
+    ],
+
     'table' => [
         'key' => 'Klucz',
         'name' => 'Nazwa',
@@ -24,6 +49,7 @@ return [
     'form' => [
         'section_definition' => 'Definicja',
         'section_terms' => 'Kiedy jest przyznawane',
+        'terms_hint' => 'Najpierw wybierz typ powyżej — pojawią się tu jego ustawienia.',
         'section_presentation' => 'Jak wygląda',
         'section_behaviour' => 'Zachowanie',
 

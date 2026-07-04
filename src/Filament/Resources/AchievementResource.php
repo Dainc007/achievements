@@ -18,6 +18,7 @@ use Dainc007\Achievements\Support\EvaluatorRegistry;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -65,6 +66,7 @@ final class AchievementResource extends Resource
 
         return $schema->components([
             Section::make(__('achievements::achievements.form.section_definition'))
+                ->icon('heroicon-o-identification')
                 ->schema([
                     TextInput::make('key')
                         ->label(__('achievements::achievements.form.key'))
@@ -94,7 +96,15 @@ final class AchievementResource extends Resource
                 ->columns(2),
 
             Section::make(__('achievements::achievements.form.section_terms'))
+                ->icon('heroicon-o-adjustments-horizontal')
                 ->schema([
+                    // Until a config-bearing type is picked the section has no fields,
+                    // so show a hint instead of an empty box.
+                    Placeholder::make('terms_hint')
+                        ->hiddenLabel()
+                        ->content(__('achievements::achievements.form.terms_hint'))
+                        ->columnSpanFull()
+                        ->visible(fn (Get $get): bool => $get('type') !== 'stat_threshold'),
                     // Config-driven "stat_threshold": pick a stat + a target, no raw keys.
                     ($statOptions === null
                         ? TextInput::make('config.stat')
@@ -119,6 +129,7 @@ final class AchievementResource extends Resource
                 ->columns(2),
 
             Section::make(__('achievements::achievements.form.section_presentation'))
+                ->icon('heroicon-o-sparkles')
                 ->schema([
                     TextInput::make('icon')
                         ->label(__('achievements::achievements.form.icon'))
@@ -154,6 +165,7 @@ final class AchievementResource extends Resource
                 ->columns(2),
 
             Section::make(__('achievements::achievements.form.section_behaviour'))
+                ->icon('heroicon-o-cog-6-tooth')
                 ->schema([
                     Select::make('retention')
                         ->label(__('achievements::achievements.form.retention'))
@@ -185,15 +197,22 @@ final class AchievementResource extends Resource
                     ->sortable(),
                 TextColumn::make('type')
                     ->label(__('achievements::achievements.table.type'))
-                    ->badge(),
+                    ->badge()
+                    ->color('gray')
+                    ->formatStateUsing(fn (string $state): string => self::typeLabel($state)),
                 TextColumn::make('tier')
                     ->label(__('achievements::achievements.table.tier'))
                     ->badge()
                     ->color(fn (?Tier $state): string|array => self::tierColor($state))
+                    ->formatStateUsing(fn (?Tier $state): string => self::tierLabel($state))
                     ->placeholder('—'),
                 TextColumn::make('retention')
                     ->label(__('achievements::achievements.table.retention'))
-                    ->badge(),
+                    ->badge()
+                    ->color(fn (?Retention $state): string => $state === Retention::Revocable ? 'warning' : 'success')
+                    ->formatStateUsing(fn (?Retention $state): string => $state instanceof Retention
+                        ? __('achievements::achievements.retentions.'.$state->value)
+                        : '—'),
                 IconColumn::make('is_progressive')
                     ->label(__('achievements::achievements.table.is_progressive'))
                     ->boolean(),
@@ -269,18 +288,41 @@ final class AchievementResource extends Resource
     }
 
     /**
-     * Tier → table badge/icon colour.
+     * Tier → table badge/icon colour. Hues chosen to read distinctly from one
+     * another in the dark app panel (orange/zinc/amber/fuchsia).
      *
      * @return string|array<int, string>
      */
     private static function tierColor(?Tier $tier): string|array
     {
         return match ($tier) {
-            Tier::Bronze => Color::Amber,
-            Tier::Silver => Color::Slate,
-            Tier::Gold => Color::Yellow,
-            Tier::Legendary => Color::Purple,
+            Tier::Bronze => Color::Orange,
+            Tier::Silver => Color::Zinc,
+            Tier::Gold => Color::Amber,
+            Tier::Legendary => Color::Fuchsia,
             default => 'gray',
         };
+    }
+
+    /**
+     * Tier → translated label, falling back to a dash when unset.
+     */
+    private static function tierLabel(?Tier $tier): string
+    {
+        return $tier instanceof Tier
+            ? __('achievements::achievements.tiers.'.$tier->value)
+            : '—';
+    }
+
+    /**
+     * Evaluator type → translated label, humanising the key when no
+     * translation exists (so app-registered custom types still read cleanly).
+     */
+    private static function typeLabel(string $type): string
+    {
+        $key = 'achievements::achievements.types.'.$type;
+        $translated = __($key);
+
+        return $translated === $key ? Str::headline($type) : $translated;
     }
 }
