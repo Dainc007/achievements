@@ -18,7 +18,6 @@ use Dainc007\Achievements\Support\EvaluatorRegistry;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -115,12 +114,6 @@ final class AchievementResource extends Resource
                         ->minValue(1)
                         ->visible(fn (Get $get): bool => $get('type') === 'stat_threshold')
                         ->required(fn (Get $get): bool => $get('type') === 'stat_threshold'),
-                    // Other evaluator types keep a free-form config editor.
-                    KeyValue::make('config')
-                        ->label(__('achievements::achievements.form.config'))
-                        ->helperText(__('achievements::achievements.form.config_help'))
-                        ->visible(fn (Get $get): bool => ! in_array($get('type'), [null, '', 'stat_threshold'], true))
-                        ->columnSpanFull(),
                 ])
                 ->columns(2),
 
@@ -130,8 +123,10 @@ final class AchievementResource extends Resource
                         ->label(__('achievements::achievements.form.icon'))
                         ->maxLength(255)
                         ->helperText(__('achievements::achievements.form.icon_help'))
+                        // Outer closure returns the Laravel rule so Filament does
+                        // not try to dependency-inject the rule's ($attribute…) args.
                         ->rules([
-                            static function (string $attribute, mixed $value, Closure $fail): void {
+                            fn (): Closure => static function (string $attribute, mixed $value, Closure $fail): void {
                                 if (is_string($value) && $value !== '' && ! BadgeIcon::exists($value)) {
                                     $fail(__('achievements::achievements.form.icon_invalid'));
                                 }
