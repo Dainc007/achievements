@@ -153,7 +153,7 @@ final class AchievementResource extends Resource
                         ->directory('achievement-badges'),
                     Select::make('tier')
                         ->label(__('achievements::achievements.form.tier'))
-                        ->options(Tier::class),
+                        ->options(self::tierOptions()),
                     Toggle::make('is_progressive')
                         ->label(__('achievements::achievements.form.is_progressive')),
                     TextInput::make('points')
@@ -169,7 +169,7 @@ final class AchievementResource extends Resource
                 ->schema([
                     Select::make('retention')
                         ->label(__('achievements::achievements.form.retention'))
-                        ->options(Retention::class)
+                        ->options(self::retentionOptions())
                         ->default(Retention::Permanent->value)
                         ->required()
                         ->helperText(__('achievements::achievements.form.retention_help')),
@@ -257,7 +257,39 @@ final class AchievementResource extends Resource
         $options = [];
 
         foreach ($keys as $key) {
-            $options[$key] = Str::headline($key);
+            $options[$key] = self::typeLabel($key);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Tier picker options, translated (bronze → „Brąz", …).
+     *
+     * @return array<string, string>
+     */
+    private static function tierOptions(): array
+    {
+        $options = [];
+
+        foreach (Tier::cases() as $tier) {
+            $options[$tier->value] = __('achievements::achievements.tiers.'.$tier->value);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Retention picker options, translated (permanent → „Trwałe", …).
+     *
+     * @return array<string, string>
+     */
+    private static function retentionOptions(): array
+    {
+        $options = [];
+
+        foreach (Retention::cases() as $retention) {
+            $options[$retention->value] = __('achievements::achievements.retentions.'.$retention->value);
         }
 
         return $options;
