@@ -31,4 +31,21 @@ return [
 
     'fallback_icon' => env('ACHIEVEMENTS_FALLBACK_ICON', 'heroicon-o-trophy'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Locales
+    |--------------------------------------------------------------------------
+    |
+    | Locales an admin can author name/description in. The create/edit form
+    | renders one tab per locale, and the model resolves the active locale
+    | (falling back to app.fallback_locale) when a badge is displayed. Set via
+    | ACHIEVEMENTS_LOCALES="pl,en" or override this config in the consuming app.
+    |
+    */
+
+    'locales' => array_values(array_filter(array_map(
+        'trim',
+        explode(',', (string) env('ACHIEVEMENTS_LOCALES', (string) (config('app.fallback_locale') ?: 'en')))
+    ))),
+
 ];

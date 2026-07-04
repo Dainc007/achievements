@@ -13,7 +13,7 @@ function achievementNamed(string $key, bool $active = true): Achievement
 {
     return Achievement::create([
         'key' => $key,
-        'name' => ucfirst($key),
+        'name' => ['en' => ucfirst($key)],
         'type' => 'stat_threshold',
         'config' => ['target' => 10],
         'is_active' => $active,

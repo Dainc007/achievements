@@ -12,7 +12,7 @@
         @if ($imageUrl)
             <img
                 src="{{ $imageUrl }}"
-                alt="{{ $achievement->name }}"
+                alt="{{ $achievement->displayName }}"
                 @class([
                     'h-8 w-8 shrink-0 rounded object-cover',
                     'opacity-40 grayscale' => ! $badge->earned,
@@ -30,7 +30,7 @@
         @endif
 
         <div class="min-w-0">
-            <p class="truncate font-semibold text-gray-950 dark:text-white">{{ $achievement->name }}</p>
+            <p class="truncate font-semibold text-gray-950 dark:text-white">{{ $achievement->displayName }}</p>
 
             @if ($achievement->tier)
                 <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ $achievement->tier->value }}</p>
@@ -38,8 +38,8 @@
         </div>
     </div>
 
-    @if ($achievement->description)
-        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ $achievement->description }}</p>
+    @if ($achievement->displayDescription)
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ $achievement->displayDescription }}</p>
     @endif
 
     @if ($badge->earned)
