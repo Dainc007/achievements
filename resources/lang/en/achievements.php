@@ -10,6 +10,15 @@ return [
     'earned' => 'Earned',
     'locked' => 'Locked',
     'empty' => 'No achievements yet — start playing to earn your first badge.',
+    'no_results' => 'No achievements match your search.',
+    'search_placeholder' => 'Search achievements…',
+
+    'sort' => [
+        'status' => 'Earned first',
+        'tier' => 'Tier',
+        'name' => 'Name (A–Z)',
+        'newest' => 'Newest',
+    ],
 
     'summary' => [
         'earned' => 'Earned',

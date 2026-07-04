@@ -10,6 +10,15 @@ return [
     'earned' => 'Zdobyto',
     'locked' => 'Zablokowane',
     'empty' => 'Brak osiągnięć — zacznij grać, aby zdobyć pierwszą odznakę.',
+    'no_results' => 'Brak osiągnięć pasujących do wyszukiwania.',
+    'search_placeholder' => 'Szukaj osiągnięć…',
+
+    'sort' => [
+        'status' => 'Najpierw zdobyte',
+        'tier' => 'Poziom',
+        'name' => 'Nazwa (A–Z)',
+        'newest' => 'Najnowsze',
+    ],
 
     'summary' => [
         'earned' => 'Zdobyte',
