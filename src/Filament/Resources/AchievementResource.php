@@ -41,6 +41,24 @@ final class AchievementResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
 
     #[\Override]
+    public static function getNavigationLabel(): string
+    {
+        return __('achievements::achievements.nav_label');
+    }
+
+    #[\Override]
+    public static function getModelLabel(): string
+    {
+        return __('achievements::achievements.model_label');
+    }
+
+    #[\Override]
+    public static function getPluralModelLabel(): string
+    {
+        return __('achievements::achievements.plural_label');
+    }
+
+    #[\Override]
     public static function form(Schema $schema): Schema
     {
         $statOptions = self::statOptions();
@@ -161,20 +179,27 @@ final class AchievementResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('key')
+                    ->label(__('achievements::achievements.table.key'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label(__('achievements::achievements.table.name'))
                     ->searchable(),
                 TextColumn::make('type')
+                    ->label(__('achievements::achievements.table.type'))
                     ->badge(),
                 TextColumn::make('tier')
+                    ->label(__('achievements::achievements.table.tier'))
                     ->badge()
                     ->placeholder('—'),
                 TextColumn::make('retention')
+                    ->label(__('achievements::achievements.table.retention'))
                     ->badge(),
                 IconColumn::make('is_progressive')
+                    ->label(__('achievements::achievements.table.is_progressive'))
                     ->boolean(),
-                ToggleColumn::make('is_active'),
+                ToggleColumn::make('is_active')
+                    ->label(__('achievements::achievements.table.is_active')),
             ])
             ->filters([
                 SelectFilter::make('tier')->options(Tier::class),
